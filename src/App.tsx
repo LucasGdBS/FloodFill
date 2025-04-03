@@ -1,0 +1,69 @@
+import { useState } from "react";
+import SquareMatrix from "./components/SquareMatrixComponent";
+import { colorClasses } from "./types/colorClasses";
+import { Shuffle } from "lucide-react";
+import { motion } from "framer-motion";
+import { PaintBucket } from "lucide-react";
+
+interface SquareProps {
+  color: string;
+}
+
+const colors = Object.keys(colorClasses);
+
+function shuffleMatrix(): SquareProps[][] {
+  return Array.from({ length: 6 }, () =>
+    Array.from({ length: 6 }, () => ({
+      color: colors[Math.floor(Math.random() * colors.length)],
+    }))
+  );
+}
+
+function App() {
+  const [matrix, setMatrix] = useState(() => shuffleMatrix());
+  const [version, setVersion] = useState(0);
+  const [fillColor, setFillColor] = useState<string>(colors[0]);
+
+  return (
+    <div className="flex flex-col h-screen">
+      <div className="h-screen flex items-center justify-center">
+        <SquareMatrix squares={matrix} key={version} fillColor={fillColor} />
+      </div>
+
+      <div className="flex justify-center items-center gap-4 mb-4">
+        <motion.button
+          onClick={() => {
+            setMatrix(shuffleMatrix());
+            setVersion((v) => v + 1);
+          }}
+          type="button"
+          className="p-2 bg-blue-500 text-white rounded-full shadow-md cursor-pointer hover:bg-blue-600 active:bg-blue-700 transition-all flex items-center justify-center"
+        >
+          <Shuffle size={24} />
+        </motion.button>
+
+        {colors.map((color, index) => (
+          <div
+            key={index + color}
+            className={`w-8 h-8 rounded-full cursor-pointer flex justify-center items-center ${
+              fillColor === color ? "border-2 border-black" : ""
+            }`}
+            style={{ backgroundColor: colorClasses[color] }}
+            onClick={() => setFillColor(color)}
+          >
+            {color === fillColor && (
+              <PaintBucket
+                size={18}
+                className={`${
+                  fillColor === color ? "text-white" : "text-black"
+                } transition-all`}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;
