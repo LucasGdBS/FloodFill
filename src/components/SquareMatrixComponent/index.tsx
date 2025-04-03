@@ -11,9 +11,11 @@ interface SquareProps {
 export default function SquareMatrix({
   squares,
   fillColor,
+  setClick,
 }: {
   squares: SquareProps[][];
   fillColor: string;
+  setClick: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const [matrix, setMatrix] = useState(squares);
 
@@ -25,6 +27,7 @@ export default function SquareMatrix({
       fillColor
     );
     setMatrix(updatedMatrix);
+    setClick((prev) => prev + 1);
   }
 
   function getRandomDuration() {
