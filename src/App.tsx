@@ -4,6 +4,7 @@ import { colorClasses } from "./types/colorClasses";
 import { Shuffle } from "lucide-react";
 import { motion } from "framer-motion";
 import { PaintBucket } from "lucide-react";
+import allSameColor from "./utils/allSameColor";
 
 interface SquareProps {
   color: string;
@@ -25,11 +26,19 @@ function App() {
   const [fillColor, setFillColor] = useState<string>(colors[0]);
   const [countClick, setCountClick] = useState(0);
 
+  console.log("Matrix:", matrix);
+
   return (
     <div className="flex flex-row-reverse justify-center">
       <div className="flex flex-col h-screen">
         <div className="h-screen flex items-center justify-center">
-          <SquareMatrix squares={matrix} key={version} fillColor={fillColor} setClick={setCountClick} />
+          <SquareMatrix
+            squares={matrix}
+            key={version}
+            fillColor={fillColor}
+            setClick={setCountClick}
+            win={allSameColor(matrix)}
+          />
         </div>
 
         <div className="flex justify-center items-center gap-4 mb-4">
@@ -40,7 +49,7 @@ function App() {
               setCountClick(0);
             }}
             type="button"
-            className="p-2 bg-blue-500 text-white rounded-full shadow-md cursor-pointer hover:bg-blue-600 active:bg-blue-700 transition-all flex items-center justify-center"
+            className="p-2 bg-blue-500 text-white rounded-full shadow-md cursor-pointer hover:bg-blue-600 active:bg-blue-700 transition-all flex items-center justify-center z-50"
           >
             <Shuffle size={24} />
           </motion.button>
@@ -48,7 +57,7 @@ function App() {
           {colors.map((color, index) => (
             <div
               key={index + color}
-              className={`w-8 h-8 rounded-full cursor-pointer flex justify-center items-center ${
+              className={`w-8 h-8 rounded-full cursor-pointer flex justify-center items-center z-50 ${
                 fillColor === color ? "border-2 border-black" : ""
               }`}
               style={{ backgroundColor: colorClasses[color] }}
@@ -78,6 +87,6 @@ function App() {
 const text = {
   fontSize: 30,
   fontWeight: "bold",
-}
+};
 
 export default App;
